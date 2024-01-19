@@ -1,0 +1,97 @@
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                     >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>  HOW TO USE WEB AP  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                     >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+
+*---------------------------------------KNOWN_PROBLEMS--------------------------------------------------*
+
+** Ne dat Emission teksure na avto ker odstrani navadno teksuro.
+** Ne dat teksture na Windows ker se za stekla avtomatsko nalozi threejs tekstura
+** WHEELS - Ni jih se
+** Volan je treba se popravit da se suce
+
+*---------------------------------------CONTROL BUTTONS-------------------------------------------------*
+
+Receive "ON-OFF" : OFF - Deluje move to gumb kjer si sam vpises koordinato
+		ON - Poslusa node js streznik in posodablja lokacijo glede na prejeto koordinato
+
+Edit "ON-OFF" : 	OFF: Z misko negre premikat objekte
+		ON : Z misko negre premikat objekte
+		
+SAVE : shrani sceno
+
+OPEN : nalozi shranjeno sceno
+		
+*--------------------------------SPREMINJANJE PERSPEKTIV V APLIKACIJI-----------------------------------*
+
+Key 1: 
+Key 2:
+Key 3:
+Key 4:
+Key 5:
+		
+Mouse-wheel: zoom in - zoom out
+
+*----------------------------NEURAL NETWORK KAFKA REDIS COMMUNICATION-----------------------------------*
+
+Key 9:             zgenerira sivinsko sliko in poslje v redis
+
+*----------------------------NEURAL NETWORK KAFKA REDIS COMMUNICATION-----------------------------------*
+
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                     >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>       COMMANDS      >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>                     >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+			
+
+*---------------------------------------NODE.JS:--------------------------------------------------------*
+
+	node server.js                                       Requires at least node.js 18.17.0
+	
+	nvm use 18.17.0
+
+*---------------------------------------HTTP-SERVER:----------------------------------------------------*	
+
+	python3 -m http.server 8080
+
+*---------------------------------------VIRTUALNO OKOLJE:-----------------------------------------------*
+
+	source .venv/bin/activate
+
+*-----------------------------------------ZOOKEEPER:----------------------------------------------------*
+
+   	cd ~/Desktop/Kafka/kafka_2.13-3.4.0
+    	
+    	bin/zookeeper-server-start.sh config/zookeeper.properties
+    	
+    	cd ~/Desktop/Kafka/kafka_2.13-3.4.0
+    	
+    	bin/kafka-server-start.sh config/server.properties
+    	
+*-----------------------------------------REDIS:--------------------------------------------------------*
+
+	source .venv/bin/activate
+
+	sudo docker run -d --rm --name redis -p 6379:6379 redis:7.0
+
+	sudo docker container list
+
+	sudo docker container stop redis
+	
+*-----------------------------------------REDIS_KONZOLA:------------------------------------------------*	
+
+	keys *
+
+	redis-cli
+
+	get frame:latest
+	
+*-----------------------------------------NEURAL_NET-------------------------------------------------*
+
+ 	python3 con_pro_detectionNode.py
+ 	
+*----------------------------------------------------------------------------------------------------*
+ 
+ 
+	
+	

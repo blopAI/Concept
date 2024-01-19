@@ -1,0 +1,78 @@
+#inspector 
+{
+    position: fixed;
+    right: -250px; 
+    top: 0;
+    width: 250px;
+    height: 100%;
+    background: #eee;
+    transition: right 0.5s; 
+    padding: 20px;
+    box-sizing: border-box;
+    overflow-y: auto; 
+}
+
+#inspector.visible 
+{
+    right: 0; 
+}
+
+.model-loader 
+{
+    margin-bottom: 20px;
+}
+
+.model-loader input[type="text"] 
+{
+    width: 30px;
+}
+
+#car-group 
+{
+    border: 1px solid #000;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+#environment-group 
+{
+    border: 1px solid #000;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+#environment-group 
+{
+    border: 1px solid #000;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+#obstacle-group 
+{
+    border: 1px solid #000;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.clear-button {
+    background-color: red;
+    color: white; 
+}
+
+#move-obstacle {
+    background-color: lightblue;
+    color: black; 
+}
+
+#command-group{
+    border: 1px solid red;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+#heightMap-group{
+    border: 1px solid lightgreen;
+    padding: 10px;
+    margin-bottom: 20px;
+}

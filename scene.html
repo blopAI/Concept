@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Car and Obstacle Scene</title>
+    <link rel="stylesheet" href="scene.css"> 
+</head>
+<body>
+    <div id="scene-container"></div>
+    
+    <!-- Meni za objekte -->
+    <div id="inspector">
+        <div id="command-group">
+            <button class="listen-button" data-object-type="listen">Receive</button>
+            <button class="edit-button" data-object-type="edit">Edit</button>
+            <button class="save-button" data-object-type="save">Save</button>
+            <button class="open-button" data-object-type="open">Open</button>
+        </div>
+        <div id="obstacle-group">
+        <div class="model-loader" id="obstacle-loader" >
+            Obstacle: <input type="file" id="obstacle-upload" accept=".obj">
+            Texture: <input type="file" id="obstacle-texture-upload" accept="image/*">
+            <input type="number" id="obstacle-x" placeholder="X">
+            <input type="number" id="obstacle-y" placeholder="Y">
+            <input type="number" id="obstacle-z" placeholder="Z">
+            <input type="number" id="moveTo-x" placeholder="location">
+            <button id="move-obstacle">Move to</button>
+            <button class="clear-button" data-object-type="obstacle">Clear</button>
+        </div>
+    </div>
+    <div id="environment-group">
+        <div class="model-loader" id="environment-loader">
+            Environment: <input type="file" id="environment-upload" accept=".obj">
+            Texture: <input type="file" id="environment-texture-upload" accept="image/*">
+            <input type="number" id="environment-x" placeholder="X">
+            <input type="number" id="environment-y" placeholder="Y">
+            <input type="number" id="environment-z" placeholder="Z">
+            <button class="clear-button" data-object-type="environment">Clear</button>
+        </div>
+    </div>
+        <div id="car-group">
+        <div class="model-loader" id="car-loader">
+            Car: <input type="file" id="car-upload" accept=".obj">
+            Texture: <input type="file" id="car-texture-upload" accept="image/*">
+            Emission: <input type="file" id="car-emission-upload" accept="image/*">
+            <input type="number" id="car-x" placeholder="X">
+            <input type="number" id="car-y" placeholder="Y">
+            <input type="number" id="car-z" placeholder="Z">
+            <button class="clear-button" data-object-type="car">Clear</button>
+        </div>
+        <div class="model-loader" id="wheels-loader">
+            Wheels: <input type="file" id="wheels-upload" accept=".obj">
+            Texture: <input type="file" id="wheels-texture-upload" accept="image/*">
+            <input type="number" id="wheels-x" placeholder="X">
+            <input type="number" id="wheels-y" placeholder="Y">
+            <input type="number" id="wheels-z" placeholder="Z">
+            <button class="clear-button" data-object-type="wheels">Clear</button>
+        </div>
+        <div class="model-loader" id="volan-loader">
+            Volan: <input type="file" id="volan-upload" accept=".obj">
+            Texture: <input type="file" id="volan-texture-upload" accept="image/*">
+            <input type="number" id="volan-x" placeholder="X">
+            <input type="number" id="volan-y" placeholder="Y">
+            <input type="number" id="volan-z" placeholder="Z">
+            <button class="clear-button" data-object-type="volan">Clear</button>
+        </div>
+        <div class="model-loader" id="interior-loader">
+            Interior: <input type="file" id="interior-upload" accept=".obj">
+            Texture: <input type="file" id="interior-texture-upload" accept="image/*">
+            <input type="number" id="interior-x" placeholder="X">
+            <input type="number" id="interior-y" placeholder="Y">
+            <input type="number" id="interior-z" placeholder="Z">
+            <button class="clear-button" data-object-type="interior">Clear</button>
+        </div>
+        <div class="model-loader" id="retrovizor-loader">
+            Retrovizor: <input type="file" id="retrovizor-upload" accept=".obj">
+            Texture: <input type="file" id="retrovizor-texture-upload" accept="image/*">
+            <input type="number" id="retrovizor-x" placeholder="X">
+            <input type="number" id="retrovizor-y" placeholder="Y">
+            <input type="number" id="retrovizor-z" placeholder="Z">
+            <button class="clear-button" data-object-type="retrovizor">Clear</button>
+        </div>
+        <div class="model-loader" id="windows-loader">
+            Windows: <input type="file" id="windows-upload" accept=".obj">
+            DONTCLICK: <input type="file" id="windows-texture-upload" accept="image/*">
+            <input type="number" id="windows-x" placeholder="X">
+            <input type="number" id="windows-y" placeholder="Y">
+            <input type="number" id="windows-z" placeholder="Z">
+            <button class="clear-button" data-object-type="windows">Clear</button>
+        </div>
+    </div>
+    <div id="heightMap-group">
+        <div class="model-loader" id="floor-loader">
+            Floor: <input type="file" id="floor-upload" accept=".obj">
+            Texture: <input type="file" id="floor-texture-upload" accept="image/*">
+            <input type="number" id="floor-x" placeholder="X">
+            <input type="number" id="floor-y" placeholder="Y">
+            <input type="number" id="floor-z" placeholder="Z">
+            <button class="clear-button" data-object-type="floor">Clear</button>
+        </div>
+        <div class="model-loader" id="curb-loader">
+            Curb: <input type="file" id="curb-upload" accept=".obj">
+            Texture: <input type="file" id="curb-texture-upload" accept="image/*">
+            <input type="number" id="curb-x" placeholder="X">
+            <input type="number" id="curb-y" placeholder="Y">
+            <input type="number" id="curb-z" placeholder="Z">
+            <button class="clear-button" data-object-type="curb">Clear</button>
+        </div>
+    </div>
+</div>
+    <script type="module" src="scene.js"></script>
+</body>
+</html>
