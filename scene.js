@@ -1,9 +1,9 @@
-import * as THREE from 'https://threejsfundamentals.org/threejs/resources/threejs/r119/build/three.module.js';
-import { OBJLoader } from 'https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/jsm/loaders/OBJLoader.js';
-import { RGBELoader } from 'https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/jsm/loaders/RGBELoader.js';
-import { EffectComposer } from 'https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/jsm/postprocessing/EffectComposer.js';
-import { RenderPass } from 'https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/jsm/postprocessing/RenderPass.js';
-import { ShaderPass } from 'https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/jsm/postprocessing/ShaderPass.js';
+import * as THREE from "https://threejsfundamentals.org/threejs/resources/threejs/r119/build/three.module.js";
+import { OBJLoader } from "https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/jsm/loaders/OBJLoader.js";
+import { RGBELoader } from "https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/jsm/loaders/RGBELoader.js";
+import { EffectComposer } from "https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/jsm/postprocessing/RenderPass.js";
+import { ShaderPass } from "https://threejsfundamentals.org/threejs/resources/threejs/r119/examples/jsm/postprocessing/ShaderPass.js";
 
 let targetPosition = new THREE.Vector3();
 let targetPositionCurb = new THREE.Vector3();
@@ -18,23 +18,37 @@ let insideCarCameraPosition = new THREE.Vector3(0, 1, 0);
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xabcdef);
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight,0.1,1000);
+const camera = new THREE.PerspectiveCamera(
+  75,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000
+);
 const renderer = new THREE.WebGLRenderer();
 
-
-const frustumSize = 5; 
+const frustumSize = 5;
 const aspect = window.innerWidth / window.innerHeight;
-const heightmapCamera = new THREE.OrthographicCamera(frustumSize * aspect / -2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / -2, 1, 1000);
-heightmapCamera.position.set(0, 1.5, 50); 
+const heightmapCamera = new THREE.OrthographicCamera(
+  (frustumSize * aspect) / -2,
+  (frustumSize * aspect) / 2,
+  frustumSize / 2,
+  frustumSize / -2,
+  1,
+  1000
+);
+heightmapCamera.position.set(0, 1.5, 50);
 heightmapCamera.lookAt(new THREE.Vector3(0, 0, 50));
 
-const renderTarget = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight);
+const renderTarget = new THREE.WebGLRenderTarget(
+  window.innerWidth,
+  window.innerHeight
+);
 
 const grayscaleShader = {
   uniforms: {
     tDiffuse: { value: null },
   },
-  vertexShader: `...`, 
+  vertexShader: `...`,
   fragmentShader: `
     uniform sampler2D tDiffuse;
     void main() {
@@ -42,17 +56,15 @@ const grayscaleShader = {
       float gray = 0.299 * color.r + 0.587 * color.g + 0.114 * color.b;
       gl_FragColor = vec4(gray, gray, gray, 1.0);
     }
-  `
+  `,
 };
 
 let activeCamera = camera;
 
-
-function renderHeightmap() 
-{
+function renderHeightmap() {
   renderer.setRenderTarget(renderTarget);
   renderer.render(scene, heightmapCamera);
-  
+
   grayscaleShader.uniforms.tDiffuse.value = renderTarget.texture;
 
   const postProcessQuad = new THREE.Mesh(
@@ -67,31 +79,43 @@ function renderHeightmap()
 
   const size = window.innerWidth * window.innerHeight * 4;
   const buffer = new Uint8Array(size);
-  renderer.readRenderTargetPixels(renderTarget, 0, 0, window.innerWidth, window.innerHeight, buffer);
-  const dataURL = bufferToDataURL('image/png', buffer, window.innerWidth, window.innerHeight);
+  renderer.readRenderTargetPixels(
+    renderTarget,
+    0,
+    0,
+    window.innerWidth,
+    window.innerHeight,
+    buffer
+  );
+  const dataURL = bufferToDataURL(
+    "image/png",
+    buffer,
+    window.innerWidth,
+    window.innerHeight
+  );
 
-  fetch('http://localhost:3000/receive-grayscale-image', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ image: dataURL.split(',')[1] })
+  fetch("http://localhost:3000/receive-grayscale-image", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ image: dataURL.split(",")[1] }),
   })
-  .then(response => {
+    .then((response) => {
       if (response.ok) {
-          console.log('Heightmap image sent successfully');
+        console.log("Heightmap image sent successfully");
       } else {
-          console.error('Failed to send heightmap image');
+        console.error("Failed to send heightmap image");
       }
-  })
-  .catch(error => {
-      console.error('Error sending heightmap image:', error);
-  });
+    })
+    .catch((error) => {
+      console.error("Error sending heightmap image:", error);
+    });
 
   renderer.setRenderTarget(null);
 }
 
 function bufferToDataURL(type, buffer, width, height) {
-  let canvas = document.createElement('canvas');
-  let ctx = canvas.getContext('2d');
+  let canvas = document.createElement("canvas");
+  let ctx = canvas.getContext("2d");
   canvas.width = width;
   canvas.height = height;
 
@@ -119,13 +143,13 @@ function toggleCamera() {
 }
 
 renderer.setSize(window.innerWidth, window.innerHeight);
-document.getElementById('scene-container').appendChild(renderer.domElement);
+document.getElementById("scene-container").appendChild(renderer.domElement);
 document
-  .getElementById('scene-container')
-  .addEventListener('wheel', onDocumentMouseWheel, false);
+  .getElementById("scene-container")
+  .addEventListener("wheel", onDocumentMouseWheel, false);
 
-renderer.domElement.addEventListener('mousemove', OnDocumentMouseMove, false);
-renderer.domElement.addEventListener('click', OnScreenClick, false);
+renderer.domElement.addEventListener("mousemove", OnDocumentMouseMove, false);
+renderer.domElement.addEventListener("click", OnScreenClick, false);
 
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.2;
@@ -152,12 +176,12 @@ const WheelsPositions = [
   { x: -1.67, y: 0.3, z: -0.9 }, // Zadnje desno kolo
 ];
 
-document.querySelector('.edit-button').addEventListener('click', () => {
+document.querySelector(".edit-button").addEventListener("click", () => {
   editorEnabled = !editorEnabled;
   if (editorEnabled) {
-    console.log('Editor is now enabled.');
+    console.log("Editor is now enabled.");
   } else {
-    console.log('Editor is now disabled.');
+    console.log("Editor is now disabled.");
     if (selectedObject) {
       RemoveAxisLines(selectedObject);
       selectedObject = null;
@@ -168,9 +192,9 @@ document.querySelector('.edit-button').addEventListener('click', () => {
 
 let listenToServer = false;
 
-document.getElementById('move-obstacle').addEventListener('click', () => {
+document.getElementById("move-obstacle").addEventListener("click", () => {
   if (!listenToServer) {
-    const targetX = parseFloat(document.getElementById('moveTo-x').value) || 0;
+    const targetX = parseFloat(document.getElementById("moveTo-x").value) || 0;
     targetPositionUser.set(targetX, 0, 0);
     isMoving = true;
   } else {
@@ -178,7 +202,7 @@ document.getElementById('move-obstacle').addEventListener('click', () => {
   }
 });
 
-document.querySelector('.listen-button').addEventListener('click', () => {
+document.querySelector(".listen-button").addEventListener("click", () => {
   listenToServer = !listenToServer;
   console.log(`Listening to server: ${listenToServer}`);
   if (!listenToServer) {
@@ -194,35 +218,35 @@ function moveToUserInput(x) {
 }
 
 function updateObstaclePosition(x) {
-  if (models.obstacle) 
-  {
+  if (models.obstacle) {
     targetPositionServer.x = parseFloat(x);
 
     if (listenToServer) {
       isMoving = true;
     }
   } else {
-    console.log('Obstacle not yet in scene, disregarding position update.');
+    console.log("Obstacle not yet in scene, disregarding position update.");
   }
 }
 
-
 function fetchObstacleCoordinates() {
-  fetch('http://localhost:3000/obstacle-coordinates')
+  fetch("http://localhost:3000/sensor-data")
     .then((response) => {
       if (!response.ok) {
-        console.error('Network response was not ok:', response.statusText);
-        throw new Error('Network response was not ok');
+        console.log("Status code:", response.status);
+        console.log("Status text:", response.statusText);
+        console.error("Network response was not ok:", response.statusText);
+        throw new Error("Network response was not ok");
       }
       return response.json();
     })
     .then((data) => {
-      console.log('Received data:', data);
-      if (data.x !== undefined) {
-        updateObstaclePosition(data.x);
+      console.log("Received data:", data);
+      if (data.distance !== undefined) {
+        updateObstaclePosition(data.distance);
       }
     })
-    .catch((error) => console.error('Error fetching coordinates:', error));
+    .catch((error) => console.error("Error fetching coordinates:", error));
   if (listenToServer) {
     isMoving = true;
   }
@@ -232,7 +256,7 @@ setInterval(fetchObstacleCoordinates, 10000);
 
 function setupSteeringWheel() {
   if (!models.volan) {
-    console.error('Volan model not loaded.');
+    console.error("Volan model not loaded.");
     return;
   }
 
@@ -266,13 +290,13 @@ const models = {
 };
 
 const ViewMode = {
-  ORIGINAL: 'original',
-  SIDE: 'side',
-  TOP: 'top',
-  REAR: 'rear',
-  INSIDE_CAR: 'insideCar',
-  CUSTOM: 'custom',
-  ORBIT: 'custom',
+  ORIGINAL: "original",
+  SIDE: "side",
+  TOP: "top",
+  REAR: "rear",
+  INSIDE_CAR: "insideCar",
+  CUSTOM: "custom",
+  ORBIT: "custom",
 };
 
 let currentViewMode = ViewMode.ORIGINAL;
@@ -319,38 +343,35 @@ function setCameraView(viewMode) {
       camera.lookAt(0, 0, 25);
       break;
     case ViewMode.CUSTOM:
-
       break;
   }
 }
 
-document.addEventListener('keypress', (e) => {
-  switch (e.key) 
-  {
-    case '1':
+document.addEventListener("keypress", (e) => {
+  switch (e.key) {
+    case "1":
       currentViewMode = ViewMode.ORIGINAL;
       break;
-    case '2':
+    case "2":
       currentViewMode = ViewMode.SIDE;
       break;
-    case '3':
+    case "3":
       currentViewMode = ViewMode.TOP;
       break;
-    case '4':
+    case "4":
       currentViewMode = ViewMode.REAR;
       break;
-    case '5':
+    case "5":
       currentViewMode = ViewMode.INSIDE_CAR;
       break;
-    case '9':
+    case "9":
       currentViewMode = ViewMode.CUSTOM;
       toggleCamera();
-      if (activeCamera === heightmapCamera) 
-      {
-        setTimeout(() => renderHeightmap(), 0); 
+      if (activeCamera === heightmapCamera) {
+        setTimeout(() => renderHeightmap(), 0);
       }
       break;
-    case '0':
+    case "0":
       currentViewMode = ViewMode.ORBIT;
       break;
   }
@@ -389,7 +410,7 @@ function OnScreenClick(event) {
     let intersectedObject = intersects[0].object;
     selectedObject = intersectedObject;
     isDragging = true;
-    console.log('Object clicked, adding axis lines');
+    console.log("Object clicked, adding axis lines");
     DrawAxisLines(selectedObject);
   }
 }
@@ -425,7 +446,7 @@ function DrawAxisLines(object) {
   axisGroup.add(xAxisLine, yAxisLine, zAxisLine);
 
   object.add(axisGroup);
-  console.log('axis lines added to object', axisGroup);
+  console.log("axis lines added to object", axisGroup);
 }
 
 function RemoveAxisLines(object) {
@@ -471,9 +492,9 @@ function setInsideCarView() {
   }
 }
 
-document.querySelectorAll('.clear-button').forEach((button) => {
-  button.addEventListener('click', (event) => {
-    const objectType = event.target.getAttribute('data-object-type');
+document.querySelectorAll(".clear-button").forEach((button) => {
+  button.addEventListener("click", (event) => {
+    const objectType = event.target.getAttribute("data-object-type");
     ClearObject(objectType);
   });
 });
@@ -482,18 +503,18 @@ function ClearObject(modelType) {
   if (models[modelType]) {
     scene.remove(models[modelType]);
     models[modelType] = null;
-    document.getElementById(modelType + '-x').value = '';
-    document.getElementById(modelType + '-y').value = '';
-    document.getElementById(modelType + '-z').value = '';
+    document.getElementById(modelType + "-x").value = "";
+    document.getElementById(modelType + "-y").value = "";
+    document.getElementById(modelType + "-z").value = "";
   }
 }
 
-document.addEventListener('keypress', (e) => {
-  if (e.key === 'N' || e.key === 'n') {
-    const inspector = document.getElementById('inspector');
-    inspector.classList.toggle('visible');
+document.addEventListener("keypress", (e) => {
+  if (e.key === "N" || e.key === "n") {
+    const inspector = document.getElementById("inspector");
+    inspector.classList.toggle("visible");
   }
-  if (e.key === 'k') {
+  if (e.key === "k") {
     isTopView = !isTopView;
     if (isTopView) {
     } else {
@@ -501,7 +522,7 @@ document.addEventListener('keypress', (e) => {
       camera.quaternion.copy(originalCameraQuaternion);
     }
   }
-  if (e.key === 'i') {
+  if (e.key === "i") {
     setInsideCarView();
   }
 });
@@ -520,17 +541,16 @@ const heightMapShader = {
       float normalizedHeight = (vHeight - 0.0) / (8.0 - 0.0); // Normalizing height
       gl_FragColor = vec4(normalizedHeight, normalizedHeight, normalizedHeight, 1.0);
     }
-  `
+  `,
 };
 
-function LoadModel(fileInputId, modelType) 
-{
+function LoadModel(fileInputId, modelType) {
   const fileInput = document.getElementById(fileInputId);
 
-  fileInput.addEventListener('change', (e) => {
+  fileInput.addEventListener("change", (e) => {
     const file = e.target.files[0];
     if (!file) {
-      console.error('No file selected.');
+      console.error("No file selected.");
       return;
     }
 
@@ -540,31 +560,23 @@ function LoadModel(fileInputId, modelType)
       const objLoader = new OBJLoader();
       objLoader.load(contents, (object) => {
         object.traverse((child) => {
-          if (child instanceof THREE.Mesh) 
-          {
+          if (child instanceof THREE.Mesh) {
             let material;
-            if (modelType === 'curb') 
-            {
+            if (modelType === "curb") {
               material = new THREE.MeshBasicMaterial({
                 color: 0xa9a9a9,
               });
               child.scale.set(3, 3, 3);
-            } 
-            else if (modelType === 'floor') 
-            {;
+            } else if (modelType === "floor") {
               material = new THREE.ShaderMaterial(heightMapShader);
-            } 
-            else if (modelType === 'windows') 
-            {
+            } else if (modelType === "windows") {
               material = new THREE.MeshStandardMaterial({
                 color: 0xaaaaaa,
                 transparent: true,
                 opacity: 0.5,
                 side: THREE.DoubleSide,
               });
-            } 
-            else 
-            {
+            } else {
               material = new THREE.MeshBasicMaterial({
                 color: 0x00ff00,
                 side: THREE.DoubleSide,
@@ -580,42 +592,52 @@ function LoadModel(fileInputId, modelType)
         }
         models[modelType] = object;
         scene.add(object);
-        if (modelType === 'curb' || modelType === 'floor') 
-        {
+        if (modelType === "curb" || modelType === "floor") {
           object.position.set(0, 0, 50);
         }
         UpdateModelPosition(modelType);
-        if (modelType === 'volan') {
+        if (modelType === "volan") {
           setupSteeringWheel();
         }
 
-        if (modelType === 'car') {
+        if (modelType === "car") {
           const wheelPositions = [
             { x: 1.175, y: 0.3, z: 0.9 }, // Front left wheel
             { x: -1.67, y: 0.3, z: 0.9 }, // Front right wheel
             { x: 1.175, y: 0.3, z: -0.9 }, // Rear left wheel
-            { x: -1.67, y: 0.3, z: -0.9 }  // Rear right wheel
+            { x: -1.67, y: 0.3, z: -0.9 }, // Rear right wheel
           ];
-          const wheelModels = ['tire_right.obj', 'tire_right.obj', 'tire_left.obj', 'tire_left.obj'];
+          const wheelModels = [
+            "tire_right.obj",
+            "tire_right.obj",
+            "tire_left.obj",
+            "tire_left.obj",
+          ];
 
           wheelModels.forEach((model, index) => {
-            objLoader.load('3Dmodeli/' + model, (wheelObject) => {
+            objLoader.load("3Dmodeli/" + model, (wheelObject) => {
               const wheelPivot = new THREE.Group();
               scene.add(wheelPivot);
               wheelPivot.add(wheelObject);
 
               const boundingBox = new THREE.Box3().setFromObject(wheelObject);
-              const center = boundingBox.getCenter(new THREE.Vector3()).negate();
+              const center = boundingBox
+                .getCenter(new THREE.Vector3())
+                .negate();
               wheelObject.position.copy(center);
 
-              wheelPivot.position.set(wheelPositions[index].x, wheelPositions[index].y, wheelPositions[index].z);
+              wheelPivot.position.set(
+                wheelPositions[index].x,
+                wheelPositions[index].y,
+                wheelPositions[index].z
+              );
 
-              if (!models['wheels']) {
-                models['wheels'] = new THREE.Group();
-                scene.add(models['wheels']);
+              if (!models["wheels"]) {
+                models["wheels"] = new THREE.Group();
+                scene.add(models["wheels"]);
               }
-              models['wheels'].add(wheelPivot);
-              applyTextureToModel(wheelObject, '3Dmodeli/wheels/leftTire.png');
+              models["wheels"].add(wheelPivot);
+              applyTextureToModel(wheelObject, "3Dmodeli/wheels/leftTire.png");
             });
           });
         }
@@ -626,24 +648,28 @@ function LoadModel(fileInputId, modelType)
 }
 
 function UpdateModelPosition(modelType) {
-  const xInput = document.getElementById(modelType + '-x');
-  const yInput = document.getElementById(modelType + '-y');
-  const zInput = document.getElementById(modelType + '-z');
+  const xInput = document.getElementById(modelType + "-x");
+  const yInput = document.getElementById(modelType + "-y");
+  const zInput = document.getElementById(modelType + "-z");
 
-  if (models[modelType]) 
-  {
-    const x = xInput.value ? parseFloat(xInput.value) : models[modelType].position.x;
-    const y = yInput.value ? parseFloat(yInput.value) : models[modelType].position.y;
-    const z = zInput.value ? parseFloat(zInput.value) : models[modelType].position.z;
+  if (models[modelType]) {
+    const x = xInput.value
+      ? parseFloat(xInput.value)
+      : models[modelType].position.x;
+    const y = yInput.value
+      ? parseFloat(yInput.value)
+      : models[modelType].position.y;
+    const z = zInput.value
+      ? parseFloat(zInput.value)
+      : models[modelType].position.z;
 
     models[modelType].position.set(x, y, z);
   }
 }
 
-
 function applyTextureToModel(model, texturePath) {
   const textureLoader = new THREE.TextureLoader();
-  textureLoader.load(texturePath, function(texture) {
+  textureLoader.load(texturePath, function (texture) {
     model.traverse((child) => {
       if (child instanceof THREE.Mesh) {
         child.material = new THREE.MeshBasicMaterial({
@@ -657,14 +683,14 @@ function applyTextureToModel(model, texturePath) {
 
 function ApplyTexture(textureInputId, modelType) {
   const textureInput = document.getElementById(textureInputId);
-  textureInput.addEventListener('change', (e) => {
+  textureInput.addEventListener("change", (e) => {
     const textureFile = e.target.files[0];
     if (!textureFile) {
-      console.error('No texture file selected.');
+      console.error("No texture file selected.");
       return;
     }
     if (!models[modelType]) {
-      alert('Please add a 3D model first.');
+      alert("Please add a 3D model first.");
       return;
     }
 
@@ -690,14 +716,14 @@ function ApplyTexture(textureInputId, modelType) {
 function ApplyEmissionTexture(emissionTextureInputId, modelType) {
   const emissionTextureInput = document.getElementById(emissionTextureInputId);
 
-  emissionTextureInput.addEventListener('change', (e) => {
+  emissionTextureInput.addEventListener("change", (e) => {
     const emissionTextureFile = e.target.files[0];
     if (!emissionTextureFile) {
-      console.error('No emission texture file selected.');
+      console.error("No emission texture file selected.");
       return;
     }
     if (!models[modelType]) {
-      alert('Please add a 3D model first.');
+      alert("Please add a 3D model first.");
       return;
     }
 
@@ -742,13 +768,13 @@ function updateEmissionMaterial(modelType, emissionTexture) {
 }
 
 function setupPositionInputListeners(modelType) {
-  const xInput = document.getElementById(modelType + '-x');
-  const yInput = document.getElementById(modelType + '-y');
-  const zInput = document.getElementById(modelType + '-z');
+  const xInput = document.getElementById(modelType + "-x");
+  const yInput = document.getElementById(modelType + "-y");
+  const zInput = document.getElementById(modelType + "-z");
 
-  xInput.addEventListener('input', () => UpdateModelPosition(modelType));
-  yInput.addEventListener('input', () => UpdateModelPosition(modelType));
-  zInput.addEventListener('input', () => UpdateModelPosition(modelType));
+  xInput.addEventListener("input", () => UpdateModelPosition(modelType));
+  yInput.addEventListener("input", () => UpdateModelPosition(modelType));
+  zInput.addEventListener("input", () => UpdateModelPosition(modelType));
 }
 
 function rotateSkybox() {
@@ -764,7 +790,7 @@ function rotateSkybox() {
 
 function setupHDRI() {
   const rgbeLoader = new RGBELoader();
-  rgbeLoader.load('HDRI/rusting.hdr', (texture) => {
+  rgbeLoader.load("HDRI/rusting.hdr", (texture) => {
     texture.mapping = THREE.EquirectangularReflectionMapping;
     scene.environment = texture;
 
@@ -782,28 +808,28 @@ window.onload = function () {
   setupHDRI();
 
   [
-    'obstacle',
-    'car',
-    'environment',
-    'wheels',
-    'volan',
-    'interior',
-    'retrovizor',
-    'windows',
-    'floor',
-    'curb'
+    "obstacle",
+    "car",
+    "environment",
+    "wheels",
+    "volan",
+    "interior",
+    "retrovizor",
+    "windows",
+    "floor",
+    "curb",
   ].forEach((type) => {
-    LoadModel(type + '-upload', type);
-    ApplyTexture(type + '-texture-upload', type);
+    LoadModel(type + "-upload", type);
+    ApplyTexture(type + "-texture-upload", type);
     setupPositionInputListeners(type);
   });
 
-  ApplyEmissionTexture('car-emission-upload', 'car');
+  ApplyEmissionTexture("car-emission-upload", "car");
 
-  document.getElementById('move-obstacle').addEventListener('click', () => {
+  document.getElementById("move-obstacle").addEventListener("click", () => {
     if (!listenToServer) {
       const targetX =
-        parseFloat(document.getElementById('moveTo-x').value) || 0;
+        parseFloat(document.getElementById("moveTo-x").value) || 0;
       targetPositionUser.set(targetX, 0, 0);
       isMoving = true;
     } else {
@@ -812,7 +838,7 @@ window.onload = function () {
   });
 };
 
-document.querySelector('.save-button').addEventListener('click', () => {
+document.querySelector(".save-button").addEventListener("click", () => {
   const sceneData = {};
 
   Object.keys(models).forEach((key) => {
@@ -824,12 +850,12 @@ document.querySelector('.save-button').addEventListener('click', () => {
     }
   });
 
-  localStorage.setItem('sceneData', JSON.stringify(sceneData));
-  console.log('Scene saved');
+  localStorage.setItem("sceneData", JSON.stringify(sceneData));
+  console.log("Scene saved");
 });
 
-document.querySelector('.open-button').addEventListener('click', () => {
-  const sceneDataStr = localStorage.getItem('sceneData');
+document.querySelector(".open-button").addEventListener("click", () => {
+  const sceneDataStr = localStorage.getItem("sceneData");
   if (sceneDataStr) {
     const sceneData = JSON.parse(sceneDataStr);
 
@@ -841,14 +867,13 @@ document.querySelector('.open-button').addEventListener('click', () => {
       }
     });
 
-    console.log('Scene opened');
+    console.log("Scene opened");
   } else {
-    console.log('No saved scene to open');
+    console.log("No saved scene to open");
   }
 });
 
-function Animate()
-{
+function Animate() {
   requestAnimationFrame(Animate);
   setCameraView(currentViewMode);
   renderer.render(scene, activeCamera);
@@ -857,9 +882,9 @@ function Animate()
     const axisGroup =
       selectedObject.children[selectedObject.children.length - 1];
     if (axisGroup) {
-      console.log('animating selected object');
+      console.log("animating selected object");
       axisGroup.position.copy(selectedObject.position);
-      console.log('axis position updated', axisGroup.position);
+      console.log("axis position updated", axisGroup.position);
     }
   }
 
@@ -899,22 +924,20 @@ function Animate()
 
   // let rotationPoint = new THREE.Vector3(1.175, 0.3, 0.9); // Točka vrtenja, prilagodite glede na vaše potrebe
   // let rotationPoint = new THREE.Vector3(positions[0].x, positions[0].y, positions[0].z); // Točka vrtenja, prilagodite glede na vaše potrebe
-  updateModelAndCamera(models['wheels']);
+  updateModelAndCamera(models["wheels"]);
 }
 
 Animate();
 
-document.addEventListener('keydown', handleToggle, false);
+document.addEventListener("keydown", handleToggle, false);
 
 // Global variables for object rotation
 var rotateObjectZ = 0; // Object rotation around Z-axis
 
 function handleToggle(event) {
-  document.addEventListener('keydown', handleObjectRotation, false);
-  document.addEventListener('keyup', handleObjectRotationRelease, false);
+  document.addEventListener("keydown", handleObjectRotation, false);
+  document.addEventListener("keyup", handleObjectRotationRelease, false);
 }
-
-
 
 function updateModelAndCamera(model) {
   if (model != null) {
@@ -924,19 +947,24 @@ function updateModelAndCamera(model) {
   }
 }
 
-function spinWheel(boolVar){
+function spinWheel(boolVar) {
   var spinDirection = 0;
-  if(boolVar){
+  if (boolVar) {
     spinDirection = -1;
-  }else{
+  } else {
     spinDirection = 1;
   }
 
   let rotationAxis = new THREE.Vector3(0, 0, 1); // Os za vrtenje (z os)
-  if (models['wheels']) {
-    models['wheels'].children.forEach((wheelPivot) => {
+  if (models["wheels"]) {
+    models["wheels"].children.forEach((wheelPivot) => {
       let rotationPoint = wheelPivot.position.clone();
-      rotateAboutPoint(wheelPivot, rotationPoint, rotationAxis, spinDirection*0.3); // Zavrti za 0.05 radianov
+      rotateAboutPoint(
+        wheelPivot,
+        rotationPoint,
+        rotationAxis,
+        spinDirection * 0.3
+      ); // Zavrti za 0.05 radianov
     });
   }
 }
@@ -987,4 +1015,3 @@ function handleObjectRotationRelease(event) {
       break;
   }
 }
-
