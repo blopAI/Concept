@@ -898,7 +898,7 @@ function Animate() {
       models.obstacle.position.y,
       models.obstacle.position.z
     );
-    models.obstacle.position.lerp(newTargetPosition, 0.05);
+    models.obstacle.position.lerp(newTargetPosition, 0);
 
     let newTargetPositionCurb = new THREE.Vector3(
       obstacleTargetX,
